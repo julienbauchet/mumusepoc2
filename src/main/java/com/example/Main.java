@@ -57,7 +57,7 @@ public class Main {
 	}
 	
 	@RequestMapping(value = "/ple")
-	List<String> ple(@RequestParam(value = "insee", defaultValue = "World") String insee) throws Exception {
+	List<String> listPle(@RequestParam(value = "insee", defaultValue = "World") String insee) throws Exception {
 		Connection connection = dataSource.getConnection();
 
 		Statement stmt = connection.createStatement();
