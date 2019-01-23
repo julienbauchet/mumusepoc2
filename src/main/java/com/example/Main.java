@@ -34,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.kafka.DemoProducer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -46,6 +48,9 @@ public class Main {
 
 	@Autowired
 	private DataSource dataSource;
+	
+	@Autowired
+	private DemoProducer producer;
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(Main.class, args);
@@ -76,6 +81,33 @@ public class Main {
 		return output;
 
 	}
+	
+	@RequestMapping(value = "/ciblage")
+	String ciblage(@RequestParam(value = "insee", defaultValue = "World") String insee) throws Exception {
+		
+		
+		Connection connection = dataSource.getConnection();
+
+		Statement stmt = connection.createStatement();
+
+		ResultSet rs = stmt.executeQuery("select acc.* from salesforce.account acc where acc.Siren__c like '" + insee+"'");
+		
+		System.out.println("select acc.* from salesforce.account acc where acc.Siren__c like '" + insee+"'");
+		while (rs.next()) {
+			Ple ple = new Ple();
+			ple.setInsee(rs.getString("Siren__c"));
+			ple.setSfid(rs.getString("sfid"));
+			ObjectMapper mapper = new ObjectMapper();
+			
+			producer.send(mapper.writeValueAsString(ple));
+		}
+		
+	
+		
+		
+		return "OK";
+	}
+	
 
 	@Bean
 	public DataSource dataSource() throws SQLException {
