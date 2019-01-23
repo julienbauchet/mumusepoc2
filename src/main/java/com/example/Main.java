@@ -57,7 +57,7 @@ public class Main {
 	}
 	
 	@RequestMapping(value = "/ple")
-	List<String> listPle(@RequestParam(value = "insee", defaultValue = "World") String insee) throws Exception {
+	List<Ple> listPle(@RequestParam(value = "insee", defaultValue = "World") String insee) throws Exception {
 		Connection connection = dataSource.getConnection();
 
 		Statement stmt = connection.createStatement();
@@ -65,9 +65,12 @@ public class Main {
 		ResultSet rs = stmt.executeQuery("select acc.* from salesforce.account acc where acc.Siren__c like '" + insee+"'");
 		
 		System.out.println("select acc.* from salesforce.account acc where acc.Siren__c like '" + insee+"'");
-		ArrayList<String> output = new ArrayList<String>();
+		ArrayList<Ple> output = new ArrayList<Ple>();
 		while (rs.next()) {
-			output.add("Read from  DB : " + rs.getObject(1));
+			Ple ple = new Ple();
+			ple.setInsee(rs.getString("acc.Siren__c"));
+			ple.setSfid(rs.getString("acc.sfid"));
+			output.add(ple);
 		}
 
 		return output;
