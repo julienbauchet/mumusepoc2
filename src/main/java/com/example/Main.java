@@ -55,7 +55,7 @@ public class Main {
 	String index() {
 		return "index";
 	}
-
+	
 	@RequestMapping(value = "/ple")
 	List<String> ple(@RequestParam(value = "insee", defaultValue = "World") String insee) throws Exception {
 		Connection connection = dataSource.getConnection();
@@ -66,7 +66,7 @@ public class Main {
 
 		ArrayList<String> output = new ArrayList<String>();
 		while (rs.next()) {
-			output.add("Read from DB: " + rs.getObject(1));
+			output.add("Read from DB : " + rs.getObject(1));
 		}
 
 		return output;
