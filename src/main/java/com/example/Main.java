@@ -68,8 +68,8 @@ public class Main {
 		ArrayList<Ple> output = new ArrayList<Ple>();
 		while (rs.next()) {
 			Ple ple = new Ple();
-			ple.setInsee(rs.getString("acc.Siren__c"));
-			ple.setSfid(rs.getString("acc.sfid"));
+			ple.setInsee(rs.getString("Siren__c"));
+			ple.setSfid(rs.getString("sfid"));
 			output.add(ple);
 		}
 
