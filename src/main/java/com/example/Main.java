@@ -66,7 +66,7 @@ public class Main {
 
 		ArrayList<String> output = new ArrayList<String>();
 		while (rs.next()) {
-			output.add("Read from DB : " + rs.getObject(1));
+			output.add("Read from  DB : " + rs.getObject(1));
 		}
 
 		return output;
