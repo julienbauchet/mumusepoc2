@@ -62,7 +62,7 @@ public class Main {
 
 		Statement stmt = connection.createStatement();
 
-		ResultSet rs = stmt.executeQuery("select acc.* from salesforce.account acc where acc.Siren__c=" + insee);
+		ResultSet rs = stmt.executeQuery("select acc.* from salesforce.account acc where acc.Siren__c='" + insee+"'");
 
 		ArrayList<String> output = new ArrayList<String>();
 		while (rs.next()) {
