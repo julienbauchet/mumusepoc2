@@ -63,7 +63,8 @@ public class Main {
 		Statement stmt = connection.createStatement();
 
 		ResultSet rs = stmt.executeQuery("select acc.* from salesforce.account acc where acc.Siren__c like '" + insee+"'");
-
+		
+		System.out.println("select acc.* from salesforce.account acc where acc.Siren__c like '" + insee+"'");
 		ArrayList<String> output = new ArrayList<String>();
 		while (rs.next()) {
 			output.add("Read from  DB : " + rs.getObject(1));
