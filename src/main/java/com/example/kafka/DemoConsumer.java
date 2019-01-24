@@ -1,11 +1,17 @@
 package com.example.kafka;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.sql.DataSource;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -18,12 +24,18 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.example.Ple;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Component
 public class DemoConsumer implements InitializingBean{
 	private static final Logger LOG = LoggerFactory.getLogger(DemoConsumer.class);
 
 	private static final int CAPACITY = 10;
 
+	@Autowired
+	private DataSource dataSource;
+	
 	@Autowired
 	private  KafkaConfig config;
 
@@ -65,7 +77,7 @@ public class DemoConsumer implements InitializingBean{
 
 			consumer.subscribe(Collections.singletonList(config.getTopic()));
 			LOG.info("started " + config.getTopic());
-
+			ObjectMapper mapper = new ObjectMapper();
 			do {
 				ConsumerRecords<String, String> records;
 
@@ -76,6 +88,23 @@ public class DemoConsumer implements InitializingBean{
 					LOG.debug("offset={}, key={}, value={}", record.offset(), record.key(), record.value());
 					
 					Thread.sleep(1000);
+					
+					
+					Ple ple = mapper.readValue(record.value(), Ple.class);
+					
+					Connection connection = dataSource.getConnection();
+
+					PreparedStatement stmt = connection.prepareStatement("insert into ple_idx (siren,sfid, step, state, idIdx) values (?,?,?,?,?)" );
+					stmt.setString(1, ple.getInsee());
+					stmt.setString(2, ple.getSfid());
+					stmt.setString(3, "pricing");
+					stmt.setString(4,"ok");
+					stmt.setString(5, ple.getIdxDate()+"");
+					int resutl = stmt.executeUpdate();
+					
+					connection.commit();
+				
+					
 				
 					consumer.commitSync();
 				}

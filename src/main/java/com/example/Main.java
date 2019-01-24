@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -91,12 +92,13 @@ public class Main {
 		Statement stmt = connection.createStatement();
 
 		ResultSet rs = stmt.executeQuery("select acc.* from salesforce.account acc where acc.Siren__c like '" + insee+"'");
-		
+		Date idxDate = new Date();
 		System.out.println("select acc.* from salesforce.account acc where acc.Siren__c like '" + insee+"'");
 		while (rs.next()) {
 			Ple ple = new Ple();
 			ple.setInsee(rs.getString("Siren__c"));
 			ple.setSfid(rs.getString("sfid"));
+			ple.setIdxDate(idxDate);
 			ObjectMapper mapper = new ObjectMapper();
 			
 			producer.send(mapper.writeValueAsString(ple));

@@ -19,6 +19,8 @@ import org.springframework.stereotype.Component;
 public class DemoProducer implements InitializingBean{
   private static final Logger LOG = LoggerFactory.getLogger(DemoProducer.class);
 
+
+  
   @Autowired
   private  KafkaConfig config;
   
