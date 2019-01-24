@@ -1,11 +1,12 @@
 {
   "name": "Start on Heroku: Java",
   "description": "A barebones Java app, which can easily be deployed to Heroku.",
-  "addons": [ "heroku-postgresql" ],
+  
    "formation": {
     "web": {
       "quantity": 2,
-      "size": "Standard-1X"
+      "size": "standard-1x"
     }
-  }
+  },
+  "addons": [ "heroku-postgresql" ]
 }
