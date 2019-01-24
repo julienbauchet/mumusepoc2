@@ -102,6 +102,7 @@ public class DemoConsumer implements InitializingBean{
 						stmt.setString(4,"ok");
 						stmt.setString(5, ple.getIdxDate()+"");
 						int resutl = stmt.executeUpdate();
+						connection.close();
 						
 					//	connection.commit();
 					
