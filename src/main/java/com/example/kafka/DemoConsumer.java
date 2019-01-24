@@ -55,10 +55,12 @@ public class DemoConsumer implements InitializingBean{
 			properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
 			
 			properties.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
+			properties.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 10);
 			properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
 			properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
 
 			consumer = new KafkaConsumer<>(properties);
+			
 			
 
 			consumer.subscribe(Collections.singletonList(config.getTopic()));
