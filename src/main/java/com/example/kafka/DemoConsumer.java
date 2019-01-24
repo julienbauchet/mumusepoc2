@@ -94,7 +94,7 @@ public class DemoConsumer implements InitializingBean{
 					
 					Connection connection = dataSource.getConnection();
 
-					PreparedStatement stmt = connection.prepareStatement("insert into salesforce.ple_idx (siren,sfid, step, state, idIdx) values (?,?,?,?,?)" );
+					PreparedStatement stmt = connection.prepareStatement("insert into salesforce.ple_idx (siren,sfid, step, state, ididx) values (?,?,?,?,?)" );
 					stmt.setString(1, ple.getInsee());
 					stmt.setString(2, ple.getSfid());
 					stmt.setString(3, "pricing");
