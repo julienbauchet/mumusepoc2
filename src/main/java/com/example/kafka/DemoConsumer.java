@@ -79,34 +79,40 @@ public class DemoConsumer implements InitializingBean{
 			LOG.info("started " + config.getTopic());
 			ObjectMapper mapper = new ObjectMapper();
 			do {
-				ConsumerRecords<String, String> records;
+				try {
+					ConsumerRecords<String, String> records;
 
-				records = consumer.poll(100);
+					records = consumer.poll(100);
 
-				for (ConsumerRecord<String, String> record : records) {
-					System.out.println("message reçu : topic :" + record.topic() + " msg : " + record.value());
-					LOG.debug("offset={}, key={}, value={}", record.offset(), record.key(), record.value());
-					
-					Thread.sleep(1000);
-					
-					
-					Ple ple = mapper.readValue(record.value(), Ple.class);
-					
-					Connection connection = dataSource.getConnection();
+					for (ConsumerRecord<String, String> record : records) {
+						System.out.println("message reçu : topic :" + record.topic() + " msg : " + record.value());
+						LOG.debug("offset={}, key={}, value={}", record.offset(), record.key(), record.value());
+						
+						Thread.sleep(1000);
+						
+						
+						Ple ple = mapper.readValue(record.value(), Ple.class);
+						
+						Connection connection = dataSource.getConnection();
 
-					PreparedStatement stmt = connection.prepareStatement("insert into salesforce.ple_idx (siren,sfid, step, state, ididx) values (?,?,?,?,?)" );
-					stmt.setString(1, ple.getInsee());
-					stmt.setString(2, ple.getSfid());
-					stmt.setString(3, "pricing");
-					stmt.setString(4,"ok");
-					stmt.setString(5, ple.getIdxDate()+"");
-					int resutl = stmt.executeUpdate();
+						PreparedStatement stmt = connection.prepareStatement("insert into salesforce.ple_idx (siren,sfid, step, state, ididx) values (?,?,?,?,?)" );
+						stmt.setString(1, ple.getInsee());
+						stmt.setString(2, ple.getSfid());
+						stmt.setString(3, "pricing");
+						stmt.setString(4,"ok");
+						stmt.setString(5, ple.getIdxDate()+"");
+						int resutl = stmt.executeUpdate();
+						
+					//	connection.commit();
 					
-				//	connection.commit();
-				
+						
 					
-				
-					consumer.commitSync();
+						consumer.commitSync();
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					Thread.sleep(10000);
 				}
 			} while (running.get());
 
